@@ -1,6 +1,6 @@
 package pl.warsjawa.java8.defmethods;
 
-public interface Engine {
+public interface Engine extends Lifecycle {
 
 	/**
 	 * Do not TOUCH!

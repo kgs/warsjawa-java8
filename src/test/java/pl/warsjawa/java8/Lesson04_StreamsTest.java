@@ -7,10 +7,8 @@ import pl.warsjawa.java8.people.Phone;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -23,7 +21,6 @@ import static pl.warsjawa.java8.people.Sex.MALE;
  * - More complex operations on Stream, (map, filter, forEach, sorted)
  * - Only toList() Collector
  */
-@Ignore
 public class Lesson04_StreamsTest {
 
 	public static final List<Person> PEOPLE = Arrays.asList(
@@ -59,42 +56,45 @@ public class Lesson04_StreamsTest {
 	 */
 	@Test
 	public void areAllPeopleSlim() {
-		final boolean allSlim = true; // PEOPLE.stream().allMatch()
+		final boolean allSlim = PEOPLE.stream().allMatch(p -> p.getWeight() < 80);
 
 		assertThat(allSlim).isFalse();
 	}
 
 	@Test
 	public void findTallestPerson() {
-		final Optional<Person> max = Optional.empty();
+		final Optional<Person> max = PEOPLE.stream().max((o1, o2) -> o1.getHeight() - o2.getHeight());
 
 		assertThat(max.get()).isEqualTo(PEOPLE.get(2));
 	}
 
 	@Test
 	public void countMales() {
-		final long malesCount = 0;
+		final long malesCount = PEOPLE.stream().filter(p -> p.getSex() == MALE).count();
 
 		assertThat(malesCount).isEqualTo(2);
 	}
 
 	@Test
 	public void twoOldestPeople() {
-		final List<Person> oldest = emptyList();  // PEOPLE.stream()...limit(2)
+		final List<Person> oldest = PEOPLE.stream()
+                .sorted((o1, o2) -> o1.getDateOfBirth().compareTo(o2.getDateOfBirth()))
+                .limit(2).collect(toList());
 
 		assertThat(oldest).containsExactly(PEOPLE.get(2), PEOPLE.get(1));
 	}
 
 	@Test
 	public void totalWeight() {
-		final int totalWeight = 0; //PEOPLE.stream()...mapToInt()...sum()
+		final int totalWeight = PEOPLE.stream().mapToInt(p -> p.getWeight()).sum();
 
 		assertThat(totalWeight).isEqualTo(333);
 	}
 
 	@Test
 	public void findUniqueCountryCodes() {
-		final List<Integer> distinctCountryCodes = emptyList(); // PEOPLE.stream()...flatMap()...distinct()
+        Stream<Phone> phoneStream = PEOPLE.stream().flatMap(p -> p.getPhoneNumbers().stream());
+        final List<Integer> distinctCountryCodes = phoneStream.map(p -> p.getCountryCode()).distinct().collect(toList());
 
 		assertThat(distinctCountryCodes).containsOnly(10, 11, 12);
 	}
@@ -105,6 +105,10 @@ public class Lesson04_StreamsTest {
 	@Test
 	public void forEachYoungPerson() {
 		List<String> names = new ArrayList<>();
+
+        PEOPLE.stream().filter(p -> p.getDateOfBirth().compareTo(LocalDate.of(1985, Month.DECEMBER, 25)) > 0)
+                .map(Person::getName)
+                .forEach(names::add);
 
 		// PEOPLE.stream()...forEach()
 

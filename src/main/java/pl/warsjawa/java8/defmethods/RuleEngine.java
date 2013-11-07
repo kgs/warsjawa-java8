@@ -1,8 +1,9 @@
 package pl.warsjawa.java8.defmethods;
 
-public class RuleEngine {
+public class RuleEngine implements Job, Engine {
 
+    @Override
 	public int start() {
-		return 4;
+		return Job.super.start();
 	}
 }

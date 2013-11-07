@@ -1,7 +1,7 @@
 package pl.warsjawa.java8.defmethods;
 
 
-public interface Job {
+public interface Job extends Lifecycle {
 
 	/**
 	 * Do not TOUCH!

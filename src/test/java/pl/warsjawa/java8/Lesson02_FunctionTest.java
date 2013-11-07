@@ -1,6 +1,5 @@
 package pl.warsjawa.java8;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -17,26 +16,25 @@ import static org.mockito.Mockito.mock;
  * - Turning Function, Supplier and Producer into lambda
  * - Method references (method, static method, constructor)
  */
-@Ignore
 public class Lesson02_FunctionTest {
 
 	@Test
 	public void shouldPrependHello() {
-		final Function<Integer, String> fun = null;
+		final Function<Integer, String> fun = i -> "Answer is " + i;
 
 		assertThat(fun.apply(42)).isEqualTo("Answer is 42");
 	}
 
 	@Test
 	public void shouldProduceAnser() {
-		final Supplier<Integer> answerFun = null;
+		final Supplier<Integer> answerFun = () -> 42;
 
 		assertThat(answerFun.get()).isEqualTo(42);
 	}
 
 	@Test
 	public void shouldDecideIfNegative() {
-		final Predicate<Double> isNegative = null;
+		final Predicate<Double> isNegative = aDouble -> aDouble < 0.0;
 
 		assertThat(isNegative.test(3.0)).isFalse();
 		assertThat(isNegative.test(0.0)).isFalse();
@@ -47,7 +45,9 @@ public class Lesson02_FunctionTest {
 	public void shouldCallOtherClassInConsumer() {
 		final Date dateMock = mock(Date.class);
 
-		final Consumer<Long> consumer = null;
+		final Consumer<Long> consumer = aLong -> {
+            dateMock.setTime(aLong);
+        };
 
 		consumer.accept(1000L);
 		consumer.accept(2000L);
@@ -61,7 +61,9 @@ public class Lesson02_FunctionTest {
 	public void shouldCallOtherClassInPrimitiveConsumer() {
 		final Date dateMock = mock(Date.class);
 
-		final LongConsumer consumer = null;
+		final LongConsumer consumer = value -> {
+            dateMock.setTime(value);
+        };
 
 		consumer.accept(1000L);
 		consumer.accept(2000L);
@@ -70,6 +72,5 @@ public class Lesson02_FunctionTest {
 		order.verify(dateMock).setTime(1000L);
 		order.verify(dateMock).setTime(2000L);
 	}
-
 
 }

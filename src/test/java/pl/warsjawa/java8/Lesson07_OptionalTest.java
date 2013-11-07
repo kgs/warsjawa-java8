@@ -14,7 +14,6 @@ import static pl.warsjawa.java8.people.Sex.MALE;
 /**
  * map/filter/flatMap/ifPresent
  */
-@Ignore
 public class Lesson07_OptionalTest {
 
 	private Person findPersonOrNull(int id) {
@@ -57,8 +56,12 @@ public class Lesson07_OptionalTest {
 	}
 
 	private Optional<String> tryLookupAddressById(int id) {
-		return Optional.empty(); // tryFindPerson(id).
-	}
+        return tryFindPerson(id)
+                .filter(p -> p.getSex() == MALE)
+                .flatMap(this::tryLookupAddress)
+                .filter(s -> !s.isEmpty())
+                .map(String::trim);
+    }
 
 	@Test
 	public void nulls() {

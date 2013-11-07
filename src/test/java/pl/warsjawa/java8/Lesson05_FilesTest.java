@@ -15,7 +15,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * - BufferedReader.lines()
  * - Comparator improvements
  */
-@Ignore
 public class Lesson05_FilesTest {
 
 	private final PersonDao dao = new PersonDao();

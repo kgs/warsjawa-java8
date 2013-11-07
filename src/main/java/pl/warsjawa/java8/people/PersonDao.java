@@ -7,14 +7,20 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class PersonDao {
 
 	public List<Person> loadPeopleDatabase() {
 		try (BufferedReader bufferedReader = open("/people.csv")) {
-			return Collections.emptyList();
-			// return bufferedReader.lines().
+			return bufferedReader.lines().filter(l -> !l.startsWith("#"))
+                    .map(this::parseLine).filter(p -> !p.getName().isEmpty())
+                    .sorted(Comparator.comparing(Person::getName).thenComparing(Person::getDateOfBirth))
+                    .collect(toList());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -41,6 +47,5 @@ public class PersonDao {
 				)
 		);
 	}
-
 
 }
